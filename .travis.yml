@@ -1,0 +1,26 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t elijah/react-test -f ./client/Dockerfile.dev ./client
+  
+
+script:
+  - docker run -e CI=true elijah/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t elijah/multi-client ./client
+  - docker build -t elijah/multi-nginx ./nginx
+  - docker build -t elijah/multi-server ./server
+  - docker build -t elijah/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push elijah/multi-client
+  - docker push elijah/multi-nginx
+  - docker push elijah/multi-server
+  - docker push elijah/multi-worker
+
+
