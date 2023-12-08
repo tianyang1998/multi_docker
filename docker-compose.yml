@@ -21,8 +21,8 @@ services:
       dockerfile: Dockerfile.dev
       context: ./server
     volumes:
-      - /home/node/app/node_modules
-      - ./server:/home/node/app
+      - app/node_modules
+      - ./server:/app
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -38,8 +38,8 @@ services:
      dockerfile: Dockerfile.dev
      context: ./client
     volumes:
-      - /app/node_modules
-      - ./client:/app
+      - /home/node/app/node_modules
+      - ./client:/home/node/app
 
   worker:
     build: 
